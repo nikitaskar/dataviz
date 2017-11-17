@@ -14,19 +14,28 @@ class Country {
 		this.pop = properties.pop_est;
 		this.economy = properties.economy;
 		this.concatCoords();
-		//console.log(this)
+	}
+
+	loopCoords(array) {
+		var points = [];
+		for(var i=0; i<array.length; i++) {
+			if( typeof array[i][0] == "number" ){
+				points.push({ lon: array[i][0], lat: array[i][1] })
+			} else {
+				points = points.concat(this.loopCoords(array[i])); 
+			}
+		}
+		return points;
 	}
 
 	concatCoords() {
-		this.geometry.coords = [];
-		for(var i = 0; i<this.geometry.coordinates.length; i++) {
-			for(var j = 0; j<this.geometry.coordinates[i].length; j++) {
-				this.geometry.coords.push({
-					lon: this.geometry.coordinates[i][j][0],
-					lat: this.geometry.coordinates[i][j][1]
-				})
-			}
-		}
+		console.log(this.geometry.type);
+		this.geometry.coords = []
+		//if( this.geometry.type == "MultiPolygon") {
+			this.geometry.coords = this.loopCoords(this.geometry.coordinates);	
+		//}
+		
+
 		this.nbPoint = this.geometry.coords.length;
 	}
 
@@ -34,7 +43,7 @@ class Country {
 		this.geometry.points = [];
 		if(this.geometry.coords.length) {
 			for(var i = 0; i<this.geometry.coords.length; i++) {
-				this.geometry.points.push(GeoUtil.convertGeoCoord(this.geometry.coords[i], r))
+				this.geometry.points.push(GeoUtil.coordToCart(this.geometry.coords[i], r))
 			}
 		}
 	}

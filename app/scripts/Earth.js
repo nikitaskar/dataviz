@@ -1,4 +1,7 @@
 import Country from "./Country"
+import GeoUtil from "./GeoUtil"
+// import vertShader from './../glsl/shader.vert'
+// import fragShader from './../glsl/shader.frag'
 
 class Earth {
 
@@ -15,20 +18,58 @@ class Earth {
 
 		this.radius = args.size ? args.size : Earth.SIZE;
 		this.ratio = this.radius / Earth.SIZE
-		this.geojson = args.geojson;
+		this.datas = args.datas;
+		this.datasType = args.datasType;
 		this.countries = [];
 		this.nbPoints = 0;
 		this.vertices = [];
+		this.uniforms = { 
+			u_time: { type: "f", value: 0 },
+			start: { type: "f", value: 0 },
+			end: { type: "f", value: 0 } 
+		};
 		this.setDatas();
 	}
 
-	setDatas(){
-		for(var i=0; i<this.geojson.features.length; i++) {
-			this.countries.push(new Country(this.geojson.features[i]));
+	loadGeojson(){
+		for(var i=0; i<this.datas.features.length; i++) {
+			this.countries.push(new Country(this.datas.features[i]));
 			this.countries[i].genCartesian(this.radius);
 			this.countries[i].startRank = this.nbPoints;
 			this.vertices = this.vertices.concat( this.countries[i].geometry.points); 
+			if(this.countries[i].nameLong === "France") {
+				this.uniforms.start = this.countries[i].startRank*3;
+				this.uniforms.end = this.countries[i].startRank*3 + this.countries[i].geometry.points.length*3;
+				console.log(this.countries[i].geometry.points)
+			}
+			this.nbPoints += this.countries[i].geometry.points.length; 
 		}
+	}
+
+	loadRawDatas() {
+		this.sort = [];
+		this.vertices = [];
+		var vec = new THREE.Vector3(0, 0, 0);
+		for(var i=0; i<this.datas.length; i++) {
+			if( this.sort[this.datas[i][2]] ) {
+				this.sort[this.datas[i][2]].push(this.datas[i])
+			} else {
+				this.sort[this.datas[i][2]] = [this.datas[i]]
+			}
+			this.vertices.push(GeoUtil.coordToCart({
+				lon: this.datas[i][2],
+				lat: this.datas[i][1]
+			}, this.radius + this.datas[i][0]*0.5))		
+		}
+		console.log(this.sort)
+	}
+
+	setDatas(){
+		switch(this.datasType) {
+			case "geojson": this.loadGeojson(); break;
+			case "raw": this.loadRawDatas(); break;
+		}
+		console.log(this.datasType)
 		this.nbPoints = this.vertices.length;
 	}
 
@@ -61,9 +102,11 @@ class Earth {
 		if(this.countries && this.shaders) {
 			
 			this.geometry = new THREE.BufferGeometry();
+			this.geometry.addAttribute( 'rank', new THREE.BufferAttribute( new Float32Array(this.nbPoints*3).map((i, r) => {return r}), 3))
 			this.geometry.addAttribute( 'position', new THREE.BufferAttribute( this.genBuffer(), 3))
+			console.log('Buffer load')
+			
 
-			this.uniforms = { u_time: { type: "f", value: 0 } };
 	        this.material = new THREE.ShaderMaterial({
 	            uniforms: this.uniforms,
 	            vertexShader: this.shaders.vertex,
@@ -72,7 +115,7 @@ class Earth {
 	        });
 
 	        this.mesh = new THREE.Points(this.geometry, this.material);
-
+	        this.mesh.rotation.x = -Math.PI/2;
 	    	return this.mesh; 
 		}
 		console.warn("Error in initObject3d");
