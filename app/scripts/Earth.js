@@ -47,21 +47,14 @@ class Earth {
 	}
 
 	loadRawDatas() {
-		this.sort = [];
 		this.vertices = [];
 		var vec = new THREE.Vector3(0, 0, 0);
 		for(var i=0; i<this.datas.length; i++) {
-			if( this.sort[this.datas[i][2]] ) {
-				this.sort[this.datas[i][2]].push(this.datas[i])
-			} else {
-				this.sort[this.datas[i][2]] = [this.datas[i]]
-			}
 			this.vertices.push(GeoUtil.coordToCart({
 				lon: this.datas[i][2],
 				lat: this.datas[i][1]
 			}, this.radius + this.datas[i][0]*0.5))		
 		}
-		console.log(this.sort)
 	}
 
 	setDatas(){
@@ -98,15 +91,18 @@ class Earth {
 		return this.buffer;
 	}
 
+	update() {
+		this.mesh.rotation.z += 0.001
+	}
+
+
 	initObject3d() {
 		if(this.countries && this.shaders) {
 			
 			this.geometry = new THREE.BufferGeometry();
 			this.geometry.addAttribute( 'rank', new THREE.BufferAttribute( new Float32Array(this.nbPoints*3).map((i, r) => {return r}), 3))
 			this.geometry.addAttribute( 'position', new THREE.BufferAttribute( this.genBuffer(), 3))
-			console.log('Buffer load')
-			
-
+		
 	        this.material = new THREE.ShaderMaterial({
 	            uniforms: this.uniforms,
 	            vertexShader: this.shaders.vertex,
@@ -116,9 +112,9 @@ class Earth {
 
 	        this.mesh = new THREE.Points(this.geometry, this.material);
 	        this.mesh.rotation.x = -Math.PI/2;
+
 	    	return this.mesh; 
 		}
-		console.warn("Error in initObject3d");
 	}
 }
 

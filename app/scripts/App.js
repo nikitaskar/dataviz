@@ -100,14 +100,12 @@ export default class App {
 
     render() {
         this.counter += 0.1;
-
+        this.earth.update();
         this.material.uniforms.needsUpdate = true;
         this.material.uniforms.u_time.value = this.counter;
 
         this.material2.uniforms.needsUpdate = true;
         this.material2.uniforms.u_time.value = this.counter;
-        // this.mesh.rotation.x += 0.01;
-        // this.mesh.rotation.y += 0.02;
 
     	this.renderer.render( this.scene, this.camera );
     }
