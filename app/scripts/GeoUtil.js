@@ -16,7 +16,9 @@ class GeoUtil {
 			r * Math.cos(GeoUtil.toRadian(coord.lat)) * Math.cos(GeoUtil.toRadian(coord.lon)),
 			r * Math.cos(GeoUtil.toRadian(coord.lat)) * Math.sin(GeoUtil.toRadian(coord.lon)), 
 			r * Math.sin(GeoUtil.toRadian(coord.lat)));
+
 	}
+	
 
 }
 
