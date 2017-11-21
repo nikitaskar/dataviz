@@ -1,9 +1,6 @@
-varying vec2 vUv;
-varying vec3 vPos;
 varying float time;
-
-uniform sampler2D texture;
-
+varying vec3 pos;
+varying vec2 vUv;
 
 vec3 mod289(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -95,45 +92,10 @@ float snoise(vec3 v)
   m = m * m;
   return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
                                 dot(p2,x2), dot(p3,x3) ) );
-  }
-
-
-vec2 movingTiles(vec2 uv, float _zoom, float _speed){
-    uv *= _zoom;
-    if (fract( uv.x ) > 0.){
-            uv.y += fract(time/15.)*2.0;}
-
-    return fract(uv);
 }
 
-float circle(vec2 uv, float _radius){
-    vec2 pos = uv;
-    float line = step((0.4-pos.y),pos.y);
+void main(){
 
-    return line;
-}
-
-
-void main() {
-	vec3 s = vPos;
-
-
-	vec4 text = texture2D(texture, vUv);
-	float alpha = 1.;
-	float noise = snoise(vPos*200.+time/10.);
-	vec2 st =vUv;
-
-    st = movingTiles(st,70.,0.5);
-    vec3 color = vec3( 1.0-circle(st, 1. ) );
-	if(text.x > 0.7){
-		text =  vec4(vec3(noise*0.2+0.1),0.);
-	} else {
-		text =  vec4(color*(noise*0.7+.9),0.);
-	}
-
-	if(color == vec3(0.)){
-		text=vec4(vec3(noise*0.2+0.1),1.);
-	}
-
-	gl_FragColor = vec4(text.x, text.y, text.z, alpha);
+	vec2 color = sin(vUv);
+	gl_FragColor = vec4(color,1.,1.);
 }

@@ -1,11 +1,18 @@
 // example import asset
 // import imgPath from './assets/img.jpg';
 
+global.THREE = require('three')
 import earth from "./../data/europe.json"; 
 import datas from "./../data/elevation.js";
-
+import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6';
 import vertShader from './../glsl/shader.vert'
 import fragShader from './../glsl/shader.frag'
+
+import fossilVert from './../glsl/fossilVert.vert'
+import fossilFrag from './../glsl/fossilFrag.frag'
+
+let fxaa = require('three-shader-fxaa')
+import RingFossil from './Ring'
 
 import Earth from "./Earth";
 import OrbitControls from 'three/examples/js/controls/OrbitControls'
@@ -40,19 +47,27 @@ export default class App {
         var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
         this.scene.add( directionalLight );
 
-    	this.renderer = new THREE.WebGLRenderer( {  antialias: false, alpha: 1, precision:"lowp" } );
-        this.renderer.setClearColor( 0x000000, 0 );
+        this.parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false }
+        this.renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, this.parameters );
+    	this.renderer = new THREE.WebGLRenderer( {  antialias: false, alpha: 1, precision:"highp"  } );
+
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
     	this.renderer.setPixelRatio( window.devicePixelRatio );
 
-    	this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+        
+        console.log(this.shaderPass)
+
     	this.container.appendChild( this.renderer.domElement );
         this.controls = new THREE.OrbitControls( this.camera );
         this.controls.update();
     	
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
-        this.onWindowResize();
-        this.init();
-        this.renderer.animate( this.render.bind(this) );
+        this.onWindowResize()
+
+        this.init()
+        this.fossil()
+        this.render()
     }
 
     init(){
@@ -69,17 +84,40 @@ export default class App {
         });
         this.earth.initObject3d();
         this.scene.add(this.earth.mesh);
-        console.log(this.earth)
+
+
+        this.effectComposer = new EffectComposer(this.renderer, this.renderTarget);
+        this.effectComposer.addPass(new RenderPass(this.scene, this.camera))
+        this.shaderPass = new ShaderPass(fxaa())
+        this.shaderPass.renderToScreen = true
+
+        this.effectComposer.addPass(this.shaderPass)
+
+        this.shaderPass.uniforms.resolution.value.x = window.innerWidth
+        this.shaderPass.uniforms.resolution.value.y = window.innerHeight
+        
+    }
+
+    fossil() {
+        this.fossilRing = new RingFossil({
+            shaders:{
+                fragment: fossilFrag,
+                vertex: fossilVert
+            }
+        });
+        this.scene.add(this.fossilRing)
     }
 
     render() {
+        requestAnimationFrame(this.render.bind(this))
         this.counter += 0.1;
         this.earth.material.uniforms.u_time.value = this.counter;
-    	this.renderer.render( this.scene, this.camera );
+        this.fossilRing.material.uniforms.u_time.value = this.counter;
+    	this.effectComposer.render()
     }
 
     onWindowResize() {
-
+        
     	this.camera.aspect = window.innerWidth / window.innerHeight;
     	this.camera.updateProjectionMatrix();
     	this.renderer.setSize( window.innerWidth, window.innerHeight );

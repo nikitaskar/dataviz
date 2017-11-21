@@ -23,17 +23,6 @@ class Earth {
 			y: glMatrix.vec3.create(),
 			z: glMatrix.vec3.create()
 		}
-		this.refPos.x[0] = 1;
-		this.refPos.x[1] = 0;
-		this.refPos.x[2] = 0;
-
-		this.refPos.y[0] = 0;
-		this.refPos.y[1] = 1;
-		this.refPos.y[2] = 0;
-
-		this.refPos.z[0] = 0;
-		this.refPos.z[1] = 0;
-		this.refPos.z[2] = 1;
 
 		this.radius = args.size ? args.size : Earth.SIZE;
 		this.ratio = this.radius / Earth.SIZE
@@ -122,7 +111,7 @@ class Earth {
 
 	initObject3d() {
 		if(this.countries && this.shaders) {
-			this.geometry2 = new THREE.SphereGeometry(1,254,254)
+			this.geometry2 = new THREE.SphereGeometry(4,254,254)
 			this.geometry = new THREE.InstancedBufferGeometry()
 
 			this.bluePrint = [];
@@ -157,9 +146,9 @@ class Earth {
 		                Math.random() * Math.PI );
 		        q.normalize();
 		        //assign to bufferAttribute
-		        this.rotation[ this.rotationIterator++ ] = glMatrix.vec3.angle(this.pos,this.refPos.x) / Math.PI;
-		        this.rotation[ this.rotationIterator++ ] = glMatrix.vec3.angle(this.pos,this.refPos.y) / Math.PI;
-		        this.rotation[ this.rotationIterator++ ] = glMatrix.vec3.angle(this.pos,this.refPos.z) / Math.PI;
+		        this.rotation[ this.rotationIterator++ ] = q.x;
+		        this.rotation[ this.rotationIterator++ ] = q.y;
+		        this.rotation[ this.rotationIterator++ ] = q.z;
 		        this.rotation[ this.rotationIterator++ ] = q.w;
 
 			}
