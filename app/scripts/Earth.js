@@ -2,8 +2,6 @@ import Country from "./Country"
 import GeoUtil from "./GeoUtil"
 import * as glMatrix from "gl-matrix"
 import earthTexture from "../img/EarthSpec.png"
-// import vertShader from './../glsl/shader.vert'
-// import fragShader from './../glsl/shader.frag'
 
 class Earth {
 

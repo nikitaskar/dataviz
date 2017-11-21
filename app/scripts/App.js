@@ -13,6 +13,7 @@ import fossilFrag from './../glsl/fossilFrag.frag'
 
 let fxaa = require('three-shader-fxaa')
 import RingFossil from './Ring'
+import Shard from './Shard'
 
 import Earth from "./Earth";
 import OrbitControls from 'three/examples/js/controls/OrbitControls'
@@ -39,7 +40,7 @@ export default class App {
     	document.body.appendChild( this.container );
 
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        this.camera.position.z = 15;
+        this.camera.position.z = 13;
 
     	this.scene = new THREE.Scene();
         this.counter = 0; 
@@ -49,7 +50,7 @@ export default class App {
 
         this.parameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat, stencilBuffer: false }
         this.renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, this.parameters );
-    	this.renderer = new THREE.WebGLRenderer( {  antialias: false, alpha: 1, precision:"highp"  } );
+    	this.renderer = new THREE.WebGLRenderer( {  antialias: true, alpha: 1, precision:"highp"  } );
 
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     	this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -67,6 +68,7 @@ export default class App {
 
         this.init()
         this.fossil()
+        this.shard()
         this.render()
     }
 
@@ -108,11 +110,17 @@ export default class App {
         this.scene.add(this.fossilRing)
     }
 
+    shard(){
+        this.shard = new Shard();
+       this.scene.add(this.shard)
+    }
+
     render() {
         requestAnimationFrame(this.render.bind(this))
         this.counter += 0.1;
         this.earth.material.uniforms.u_time.value = this.counter;
         this.fossilRing.material.uniforms.u_time.value = this.counter;
+        this.fossilRing.rotation.z = this.counter/50.;
     	this.effectComposer.render()
     }
 

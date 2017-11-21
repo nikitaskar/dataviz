@@ -94,8 +94,33 @@ float snoise(vec3 v)
                                 dot(p2,x2), dot(p3,x3) ) );
 }
 
+float colorValue(float noiseValue) {
+    const float smoothStepIterator = 3.0;
+    float color = 2.;
+    float number = 1.0 / smoothStepIterator;
+    for (float i = 0.0; i < smoothStepIterator; i++) {
+        color += smoothstep(noiseValue,noiseValue, i * number);
+    }
+    return color / smoothStepIterator;
+}
+
+const vec3 red = vec3(16./255., 3./255., 31./255.);
+
 void main(){
 
-	vec2 color = sin(vUv);
-	gl_FragColor = vec4(color,1.,1.);
+  float noise = snoise(vec3(pos/3.+time/20.))+snoise(vec3(pos/3.));
+  
+ vec2 vel = vec2(cos(noise),sin(noise+time/20.));
+ 
+ float color = snoise(vec3(pos/3.));
+ 
+ vec3 newCol = vec3(colorValue(color+noise));
+  float alpha;
+  if(newCol == vec3(1.)){
+    alpha = 0.;
+  } else {
+    alpha = 1.;
+    newCol = newCol*vec3(0.1)*snoise(pos*1000.+time/15.);
+  }
+	gl_FragColor = vec4(newCol,1.);
 }
