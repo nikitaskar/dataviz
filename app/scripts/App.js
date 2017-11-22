@@ -40,7 +40,7 @@ export default class App {
     	document.body.appendChild( this.container );
 
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        this.camera.position.z = 13;
+        this.camera.position.z = 15;
 
     	this.scene = new THREE.Scene();
         this.counter = 0; 
@@ -121,6 +121,7 @@ export default class App {
         this.earth.material.uniforms.u_time.value = this.counter;
         this.fossilRing.material.uniforms.u_time.value = this.counter;
         this.fossilRing.rotation.z = this.counter/50.;
+        this.shard.material.uniforms.u_time.value = this.counter;
     	this.effectComposer.render()
     }
 
