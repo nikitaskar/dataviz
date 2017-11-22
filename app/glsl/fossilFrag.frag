@@ -112,7 +112,7 @@ void main(){
   
  vec2 vel = vec2(cos(noise),sin(noise+time/20.));
  
- float color = snoise(vec3(pos/3.));
+ float color = snoise(vec3(pos/1.7));
  
  vec3 newCol = vec3(colorValue(color+noise));
   float alpha;
@@ -120,7 +120,7 @@ void main(){
     alpha = 0.;
   } else {
     alpha = 1.;
-    newCol = newCol*vec3(0.1)*snoise(pos*1000.+time/15.);
+    newCol = newCol*vec3(0.2)*snoise(pos*1000.+time/30.);
   }
 	gl_FragColor = vec4(newCol,1.);
 }

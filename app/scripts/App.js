@@ -14,9 +14,13 @@ import fossilFrag from './../glsl/fossilFrag.frag'
 let fxaa = require('three-shader-fxaa')
 import RingFossil from './Ring'
 import Shard from './Shard'
+import Background from './Background'
+import CleanRing from './CleanRing'
+import NuclearRing from './NuclearRing'
 
 import Earth from "./Earth";
 import OrbitControls from 'three/examples/js/controls/OrbitControls'
+
 
 export default class App {
     adaptData() {
@@ -40,7 +44,7 @@ export default class App {
     	document.body.appendChild( this.container );
 
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-        this.camera.position.z = 15;
+        this.camera.position.z = 21;
 
     	this.scene = new THREE.Scene();
         this.counter = 0; 
@@ -56,9 +60,6 @@ export default class App {
     	this.renderer.setPixelRatio( window.devicePixelRatio );
 
 
-        
-        console.log(this.shaderPass)
-
     	this.container.appendChild( this.renderer.domElement );
         this.controls = new THREE.OrbitControls( this.camera );
         this.controls.update();
@@ -69,6 +70,9 @@ export default class App {
         this.init()
         this.fossil()
         this.shard()
+        this.background()
+        this.clean()
+        this.nuclear()
         this.render()
     }
 
@@ -110,18 +114,36 @@ export default class App {
         this.scene.add(this.fossilRing)
     }
 
+    clean() {
+        this.cleanRing = new CleanRing();
+        this.scene.add(this.cleanRing);
+    }
+
+    nuclear() {
+        this.nuclearRing = new NuclearRing();
+        this.scene.add(this.nuclearRing);
+    }
+
     shard(){
         this.shard = new Shard();
-       this.scene.add(this.shard)
+        this.scene.add(this.shard)
+    }
+
+    background() {
+        this.background = new Background();
+        this.scene.add(this.background)
     }
 
     render() {
         requestAnimationFrame(this.render.bind(this))
         this.counter += 0.1;
         this.earth.material.uniforms.u_time.value = this.counter;
+        this.earth.mesh.rotation.y += Math.PI /720;
+
         this.fossilRing.material.uniforms.u_time.value = this.counter;
         this.fossilRing.rotation.z = this.counter/50.;
         this.shard.material.uniforms.u_time.value = this.counter;
+        this.background.material.uniforms.u_time.value = this.counter;
     	this.effectComposer.render()
     }
 

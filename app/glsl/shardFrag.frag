@@ -93,7 +93,8 @@ float snoise(vec3 v)
 varying vec2 vUv;
 varying vec3 vPos;
 void main() {
-	vec3 color = vec3(snoise(vPos*100.))*vec3(5./255.,206./255.,224./255.);
+	vec3 color = vec3(snoise(vPos*20.)+0.3)*vec3(30./255.,220./255.,228./255.);
+  color = color/2. + 0.2;
 
 	gl_FragColor = vec4(vec3(color),1.);
 }
