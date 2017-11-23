@@ -120,7 +120,7 @@ void main(){
     alpha = 0.;
   } else {
     alpha = 1.;
-    newCol = newCol*vec3(0.2)*snoise(pos*1000.+time/30.);
+    newCol = newCol*vec3(0.1)*snoise(pos*30.+time/30.);
   }
 	gl_FragColor = vec4(newCol,1.);
 }

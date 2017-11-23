@@ -66,7 +66,8 @@ class Shard {
 		this.geometry.addAttribute('scale', new THREE.InstancedBufferAttribute(this.scale, 3,1))
 		this.geometry.addAttribute('rotation', new THREE.InstancedBufferAttribute(this.rotation, 4,1))
 		this.geometry.addAttribute('rotationDir', new THREE.InstancedBufferAttribute(this.rotationDir, 1,1))
-
+		this.geometry.attributes.position.needsUpdate = true;
+		this.geometry.attributes.position.dynamic = true;
 		this.material = new THREE.ShaderMaterial({
 			uniforms: this.uniforms,
 	        vertexShader: shardVert,

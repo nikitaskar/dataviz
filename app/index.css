@@ -1,6 +1,92 @@
+@font-face {
+ font-family: "Gotham";
+ src: url("font/gotham.otf") format("otf"),
+ 		url("font/gotham.ttf") format("ttf"),
+        url("font/gotham.woff") format("woff");
+}
 html, body {
     margin: 0;
     padding: 0;
     background-color: #f1f1f1;
-    font-family: sans-serif;
+   
+}
+
+canvas {
+	position: absolute;
+}
+
+.name {
+	position: absolute;
+	color:white;
+	top:15vh;
+	width:100vw;
+	text-align: center;
+	opacity:0;
+	transition: opacity 1s;
+	z-index: 1;
+	font-family: "Gotham";
+	font-size:20px;
+	pointer-events: none;
+}
+
+.nav{
+	position: absolute;
+	bottom:20vh;
+	text-align: center;
+	width:100%;
+	z-index: 1;
+	transition: opacity 1s;
+	opacity: 0;
+}
+
+button{
+	color:white;
+	background: none;
+	padding:5px 10px;
+	border: 2px solid white;
+	border-radius: 30px;
+	font-family: "Gotham";
+	font-size: 18px;
+	z-index: 1;
+	cursor: pointer;
+}
+
+button:first-child{
+	margin-right:30px;
+}
+
+.infos {
+	z-index: 2;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	color: white;
+	width:40%;
+	font-family: "Gotham";
+	pointer-events: none;
+	color: white;
+	background-color: black;
+	border-radius: 10px;
+	padding:30px;
+	text-align: justify;
+}
+
+.lowPrct{
+	position: absolute;
+	color: white;
+	z-index: 1;
+	opacity:0;
+	transition: opacity 1s;
+	font-family: "Gotham";
+	pointer-events: none;
+}
+
+.highPrct{
+	position: absolute;
+	color: white;
+	z-index: 1;
+	opacity:0;
+	transition: opacity 1s;
+	font-family: "Gotham";
+	pointer-events: none;
 }

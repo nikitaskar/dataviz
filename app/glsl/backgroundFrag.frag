@@ -97,10 +97,10 @@ varying float time;
 void main() {
 
 	vec2 st = vUv;
-	float pct = .3-distance(st, vec2(0.5));
+	float pct = .25-distance(st, vec2(0.5));
 
 	
 
-	vec3 color = vec3(pct)*(snoise(pos*70.+time/20.)+0.4);
+	vec3 color = vec3(pct)*(snoise(pos*11.5+time/20.)+0.4);
 	gl_FragColor = vec4(color,1.);
 }

@@ -16,12 +16,6 @@ class Earth {
 		this.uniforms;
 		this.shaders = args.shaders;
 
-		this.refPos = {
-			x: glMatrix.vec3.create(),
-			y: glMatrix.vec3.create(),
-			z: glMatrix.vec3.create()
-		}
-
 		this.radius = args.size ? args.size : Earth.SIZE;
 		this.ratio = this.radius / Earth.SIZE
 		this.datas = args.datas;
@@ -35,7 +29,6 @@ class Earth {
 			end: { type: "f", value: 0 },
 			texture: {type: "t", value: THREE.ImageUtils.loadTexture(earthTexture)}
 		};
-		this.setDatas();
 	}
 
 	loadGeojson(){
@@ -110,50 +103,7 @@ class Earth {
 	initObject3d() {
 		if(this.countries && this.shaders) {
 			this.geometry2 = new THREE.SphereGeometry(4,254,254)
-			this.geometry = new THREE.InstancedBufferGeometry()
-
-			this.bluePrint = [];
-			for (var i = 0; i < 3; i++) {
-				var angle = Math.PI/180*i*120;
-				this.bluePrint.push(Math.cos(angle), Math.sin(angle), Math.cos(angle))
-			}
-
-			this.attribute = new THREE.BufferAttribute(new Float32Array(this.bluePrint),3)
-			this.geometry.addAttribute('position', this.attribute)
-
-			this.translation = new Float32Array(this.nbPoints*3)
-			this.translationIterator = 0;
-
-			this.rotation = new Float32Array(this.nbPoints*4)
-			this.rotationIterator = 0;
-			var q = new THREE.Quaternion();
-
-			for (var i = 0; i < this.nbPoints; i+=6) {
-				this.translation[this.translationIterator++] = this.vertices[i].x
-				this.translation[this.translationIterator++] = this.vertices[i].y
-				this.translation[this.translationIterator++] = this.vertices[i].z
-				this.pos = glMatrix.vec3.create();
-				this.pos[0] = this.vertices[i].x;
-				this.pos[1] = this.vertices[i].y;
-				this.pos[2] = this.vertices[i].z;
-				console.log()
-
-				 q.set(  ( Math.random() - .5 ) * 2,
-		                ( Math.random() - .5 ) * 2,
-		                ( Math.random() - .5 ) * 2,
-		                Math.random() * Math.PI );
-		        q.normalize();
-		        //assign to bufferAttribute
-		        this.rotation[ this.rotationIterator++ ] = q.x;
-		        this.rotation[ this.rotationIterator++ ] = q.y;
-		        this.rotation[ this.rotationIterator++ ] = q.z;
-		        this.rotation[ this.rotationIterator++ ] = q.w;
-
-			}
-
-			this.geometry.addAttribute('translation', new THREE.InstancedBufferAttribute(this.translation, 3,1))
-			this.geometry.addAttribute('rotation', new THREE.InstancedBufferAttribute(this.rotation, 4,1))
-
+			
 			this.material = new THREE.ShaderMaterial({ 				
 		        uniforms: this.uniforms,
 		        vertexShader: this.shaders.vertex,

@@ -120,19 +120,21 @@ void main() {
 
 	vec4 text = texture2D(texture, vUv);
 	float alpha = 1.;
-	float noise = snoise(vPos*300.+time/10.);
+	float noise = snoise(vPos*20.+time/10.);
 	vec2 st =vUv;
 
     st = movingTiles(st,70.,0.5);
     vec3 color = vec3( 1.0-circle(st, 1. ) );
 	if(text.x > 0.7){
-		text =  vec4(vec3(noise*0.2+0.07),0.);
+		alpha = 1.;
+		text =  vec4(vec3(noise*0.2),0.);
 	} else {
 		text =  vec4(color*(noise*0.7+.9),0.);
 	}
 
 	if(color == vec3(0.)){
-		text=vec4(vec3(noise*0.2+0.07),1.);
+		alpha  = 1.;
+		text=vec4(vec3(noise*0.2),1.);
 	}
 
 	gl_FragColor = vec4(text.x, text.y, text.z, alpha);

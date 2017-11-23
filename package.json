@@ -36,9 +36,10 @@
     "webpack-glsl-loader": "^1.0.1"
   },
   "dependencies": {
-    "webvr-polyfill": "^0.9.38",
-    "gsap": "^1.20.2",
+    "gsap": "^1.20.3",
+    "json-loader": "^0.5.7",
     "three": "^0.87.1",
-    "json-loader": "^0.5.7"
+    "three.meshline": "^1.0.3",
+    "webvr-polyfill": "^0.9.38"
   }
 }

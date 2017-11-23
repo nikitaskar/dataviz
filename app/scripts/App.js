@@ -4,12 +4,22 @@
 global.THREE = require('three')
 import earth from "./../data/europe.json"; 
 import datas from "./../data/elevation.js";
+
+import fossil from "./../data/fossil.js"
+import nuclear from "./../data/nuclear.js"
+import clean from "./../data/clean.js"
+import Infos from './Infos.js'
+import {TweenMax, TimelineMax} from "gsap"
+
+
 import EffectComposer, { RenderPass, ShaderPass, CopyShader } from 'three-effectcomposer-es6';
 import vertShader from './../glsl/shader.vert'
 import fragShader from './../glsl/shader.frag'
 
 import fossilVert from './../glsl/fossilVert.vert'
 import fossilFrag from './../glsl/fossilFrag.frag'
+
+import Graph from './Graph'
 
 let fxaa = require('three-shader-fxaa')
 import RingFossil from './Ring'
@@ -45,10 +55,11 @@ export default class App {
 
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
         this.camera.position.z = 21;
+        this.onData = false;
 
     	this.scene = new THREE.Scene();
         this.counter = 0; 
-
+        this.rings = [];
         var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
         this.scene.add( directionalLight );
 
@@ -64,7 +75,12 @@ export default class App {
         this.controls = new THREE.OrbitControls( this.camera );
         this.controls.update();
     	
+        this.raycaster = new THREE.Raycaster()
+        this.mouse = new THREE.Vector2()
+
         window.addEventListener('resize', this.onWindowResize.bind(this), false);
+        document.querySelector('canvas').addEventListener('click', this.mouseMove.bind(this))
+
         this.onWindowResize()
 
         this.init()
@@ -74,6 +90,25 @@ export default class App {
         this.clean()
         this.nuclear()
         this.render()
+    }
+
+    backButton(){
+        this.back = document.querySelector(".back")
+        this.back.addEventListener('click', this.backToEarth.bind(this))
+    }
+
+    backToEarth(){
+        
+        this.graph.backToEarth()
+
+        setTimeout(function(){
+            var tween = TweenMax.to(this.earth.mesh.scale,0.6,{x:1,y:1,z:1,ease: Power1.easeOut, delay:0.9})
+            for (var i = 0; i < this.rings.length; i++) {
+                var tweenRings = new TweenMax.to(this.rings[i].scale,1,{x:1, y:1, z:1,ease: Back.easeIn.config(1.5)})
+            }
+            TweenMax.to(this.shard.scale,2,{x:1,y:1,z:1,ease:Back.easeOut.config(1.2)})
+            this.onData = false;
+        }.bind(this),700)
     }
 
     init(){
@@ -101,7 +136,14 @@ export default class App {
 
         this.shaderPass.uniforms.resolution.value.x = window.innerWidth
         this.shaderPass.uniforms.resolution.value.y = window.innerHeight
+
+        this.backButton()
         
+    }
+
+    mouseMove(event){
+        this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     }
 
     fossil() {
@@ -111,16 +153,29 @@ export default class App {
                 vertex: fossilVert
             }
         });
+        this.fossilRing.data = fossil;
+        this.fossilRing.info = Infos[0]
+        this.fossilRing.name = "Production avec des énérgies fossiles";
+        this.rings.push(this.fossilRing)
         this.scene.add(this.fossilRing)
     }
 
     clean() {
         this.cleanRing = new CleanRing();
+        this.cleanRing.data = clean;
+        this.cleanRing.info = Infos[2]
+        this.cleanRing.name = "Production avec des énérgies renouvelables"
+        this.rings.push(this.cleanRing)
         this.scene.add(this.cleanRing);
     }
 
     nuclear() {
         this.nuclearRing = new NuclearRing();
+        this.nuclearRing.data = nuclear;
+
+        this.nuclearRing.info = Infos[1]
+        this.nuclearRing.name = "Production avec des énérgies nucléaire"
+        this.rings.push(this.nuclearRing)
         this.scene.add(this.nuclearRing);
     }
 
@@ -144,6 +199,28 @@ export default class App {
         this.fossilRing.rotation.z = this.counter/50.;
         this.shard.material.uniforms.u_time.value = this.counter;
         this.background.material.uniforms.u_time.value = this.counter;
+
+        this.raycaster.setFromCamera( this.mouse, this.camera );
+
+        // calculate objects intersecting the picking ray
+        var intersects = this.raycaster.intersectObjects( this.rings );
+
+        for ( var i = 0; i < intersects.length; i++ ) {
+            if (!this.onData) {
+                this.onData = true;
+
+                var tween = TweenMax.to(this.earth.mesh.scale,0.6,{x:0,y:0,z:0,ease: Power1.easeIn, delay:0.3})
+                for (var i = 0; i < this.rings.length; i++) {
+                    var tweenRings = new TweenMax.to(this.rings[i].scale,1,{x:3, y:3, z:3,ease: Back.easeOut.config(1.5)})
+                }
+                TweenMax.to(this.shard.scale,1,{x:2,y:2,z:2,})
+                this.graph = new Graph({scene:this.scene, datas:intersects[0].object.data, type:intersects[0].object.name, camera:this.camera, info:intersects[0].object.info})
+            }
+            this.mouse.x = 0;
+            this.mouse.y = 0;
+
+        }
+
     	this.effectComposer.render()
     }
 

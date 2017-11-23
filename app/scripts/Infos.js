@@ -1,0 +1,7 @@
+var Infos = [
+	"Les énergies fossiles sont des énergies produites par la combustion du charbon, du pétrole ou du gaz naturel. Ces ressources sont enfouies dans le sol depuis des millions d’années et ne peuvent être reconstituées une fois utilisées.Utilisé depuis des siècles, le charbon reste encore la première source de production d’électricité. Néanmoins ses émissions de gaz à effet de serre sont une menace pour l’environnement, on remarque ainsi depuis cinq ans une légère baisse de l’utilisation d’énergies fossiles due à l’essor des énergies renouvelables, plus viables pour l’environnement. ",
+	"L’énergie nucléaire est produite par la combustion de l’uranium, un minerai contenu dans le sous-sol terrien. La fission d’atomes d’uranium dans des centrales nucléaires entraîne une production électrique. Ses déchets sont toutefois considérés comme dangereux et la maîtrise de la sûreté de l’uranium est très exigeante. En mai 2016, on dénombre 441 réacteurs nucléaires opérationnels.",
+	"Une énergie est dite renouvelable lorsqu’elle est produite par une source renouvelée en permanence par la nature, comme l’énergie solaire, éolienne, ou géothermique. Les énergies renouvelables, exceptée l’énergie hydraulique, produite depuis très longtemps, ne représentent qu’une très petite part du bilan électrique mondial. Toutefois on peut remarquer une progression croissante de leur développement. "
+]
+
+export default Infos
