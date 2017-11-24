@@ -73,6 +73,7 @@ export default class App {
 
     	this.container.appendChild( this.renderer.domElement );
         this.controls = new THREE.OrbitControls( this.camera );
+        this.controls.enableZoom = false;
         this.controls.update();
     	
         this.raycaster = new THREE.Raycaster()
@@ -109,6 +110,8 @@ export default class App {
             TweenMax.to(this.shard.scale,2,{x:1,y:1,z:1,ease:Back.easeOut.config(1.2)})
             this.onData = false;
         }.bind(this),700)
+        this.mouse.x = 0;
+        this.mouse.y = 0;
     }
 
     init(){

@@ -103,6 +103,7 @@ class Graph {
 		this.high.style.opacity = 1
         this.high.style.transform = "translate(" + vector2.x + "px," + vector2.y + "px) scale(0.75)";
         this.nav.style.opacity = 1;
+        this.nav.style.pointerEvents = "auto"
 	}
 
 	backToEarth(){
@@ -122,6 +123,7 @@ class Graph {
 		this.low.style.opacity = 0;
 		this.name.style.opacity = 0;
 		this.nav.style.opacity = 0;
+		this.nav.style.pointerEvents = "none"
 	}
 }
 
