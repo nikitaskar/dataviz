@@ -101,6 +101,6 @@ void main() {
 
 	
 
-	vec3 color = vec3(pct)*(snoise(pos*11.5+time/20.)+0.4);
+	vec3 color = vec3(pct)*(snoise(pos*13.5+time/20.)+0.4);
 	gl_FragColor = vec4(color,1.);
 }

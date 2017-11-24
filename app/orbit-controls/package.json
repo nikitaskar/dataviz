@@ -1,0 +1,89 @@
+{
+  "_from": "orbit-controls",
+  "_id": "orbit-controls@1.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-/3TpeuKi8+CvkzezicV1Qr+HgIvVQvE8RwBN3TYCH+CdSP01PMhlOW2ypBjo0Nlkr/qFbwCsjxgkGRp+iTsUqg==",
+  "_location": "/orbit-controls",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "orbit-controls",
+    "name": "orbit-controls",
+    "escapedName": "orbit-controls",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#DEV:/",
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/orbit-controls/-/orbit-controls-1.2.0.tgz",
+  "_shasum": "c1ae223ecc4aeb3443e12321f11d0c3f9988dce1",
+  "_spec": "orbit-controls",
+  "_where": "/Users/nskargovskii/Desktop/dataviz",
+  "author": {
+    "name": "Matt DesLauriers",
+    "email": "dave.des@gmail.com",
+    "url": "https://github.com/mattdesl"
+  },
+  "bugs": {
+    "url": "https://github.com/Jam3/orbit-controls/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "clamp": "^1.0.1",
+    "defined": "^1.0.0",
+    "gl-quat": "^1.0.0",
+    "gl-vec3": "^1.0.3",
+    "mouse-event-offset": "^3.0.2",
+    "mouse-wheel": "^1.2.0",
+    "quat-from-unit-vec3": "^1.0.0",
+    "touch-pinch": "^1.0.0"
+  },
+  "deprecated": false,
+  "description": "generic controls for orbiting a target in 3D",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "budo": "^8.0.0",
+    "canvas-loop": "^1.0.5",
+    "draw-triangles-2d": "^1.0.0",
+    "icosphere": "^1.0.0",
+    "mesh-combine": "^1.1.0",
+    "perspective-camera": "^2.0.1",
+    "primitive-torus": "^1.0.4",
+    "standard": "^6.0.7",
+    "three": "^0.72.0",
+    "uglify-js": "^2.4.24"
+  },
+  "homepage": "https://github.com/Jam3/orbit-controls",
+  "keywords": [
+    "orbit",
+    "camera",
+    "control",
+    "controls",
+    "perpsective",
+    "perspective-camera",
+    "3d",
+    "2d",
+    "webgl",
+    "stackgl"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "orbit-controls",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Jam3/orbit-controls.git"
+  },
+  "scripts": {
+    "build": "npm run build-canvas && npm run build-three",
+    "build-canvas": "browserify demo/canvas.js | uglifyjs -cm > demo/canvas-bundle.js",
+    "build-three": "browserify demo/three.js | uglifyjs -cm > demo/three-bundle.js",
+    "start": "budo demo/canvas.js:canvas-bundle.js --dir demo --live",
+    "test": "standard",
+    "three": "budo demo/three.js:three-bundle.js --dir demo --live"
+  },
+  "version": "1.2.0"
+}

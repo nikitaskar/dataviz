@@ -30,7 +30,7 @@ import NuclearRing from './NuclearRing'
 
 import Earth from "./Earth";
 import OrbitControls from 'three/examples/js/controls/OrbitControls'
-
+import createControls from './../orbit-controls'
 
 export default class App {
     adaptData() {
@@ -69,12 +69,18 @@ export default class App {
 
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     	this.renderer.setPixelRatio( window.devicePixelRatio );
+        this.click = document.querySelector('.click')
 
+        this.target = new THREE.Vector3();
+        this.controls = createControls({
+            position : [0,0,0],
+            distance: 21,
+            zoom: false,
+            rotateSpeed: 0.0015,
+            damping: 0.05,
+        });
 
     	this.container.appendChild( this.renderer.domElement );
-        this.controls = new THREE.OrbitControls( this.camera );
-        this.controls.enableZoom = false;
-        this.controls.update();
     	
         this.raycaster = new THREE.Raycaster()
         this.mouse = new THREE.Vector2()
@@ -177,7 +183,7 @@ export default class App {
         this.nuclearRing.data = nuclear;
 
         this.nuclearRing.info = Infos[1]
-        this.nuclearRing.name = "Production avec des énérgies nucléaire"
+        this.nuclearRing.name = "Production avec des énérgies nucléaires"
         this.rings.push(this.nuclearRing)
         this.scene.add(this.nuclearRing);
     }
@@ -199,7 +205,9 @@ export default class App {
         this.earth.mesh.rotation.y += Math.PI /720;
 
         this.fossilRing.material.uniforms.u_time.value = this.counter;
+        this.nuclearRing.material.uniforms.u_time.value = this.counter;
         this.fossilRing.rotation.z = this.counter/50.;
+        this.nuclearRing.rotation.z = -this.counter/100.;
         this.shard.material.uniforms.u_time.value = this.counter;
         this.background.material.uniforms.u_time.value = this.counter;
 
@@ -209,6 +217,7 @@ export default class App {
         var intersects = this.raycaster.intersectObjects( this.rings );
 
         for ( var i = 0; i < intersects.length; i++ ) {
+            this.click.style.opacity = 0;
             if (!this.onData) {
                 this.onData = true;
 
@@ -223,6 +232,12 @@ export default class App {
             this.mouse.y = 0;
 
         }
+
+        this.controls.update();
+        console.log(this.controls)
+      this.camera.position.fromArray(this.controls.position);
+      this.camera.up.fromArray(this.controls.up);
+      this.camera.lookAt(this.target);
 
     	this.effectComposer.render()
     }

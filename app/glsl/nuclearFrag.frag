@@ -107,20 +107,24 @@ float colorValue(float noiseValue) {
 const vec3 red = vec3(16./255., 3./255., 31./255.);
 
 void main(){
+  vec3 st = pos;
 
-  float noise = snoise(vec3(pos/3.+time/20.))+snoise(vec3(pos/3.));
-  
- vec2 vel = vec2(cos(noise),sin(noise+time/20.));
- 
- float color = snoise(vec3(pos/1.7));
- 
- vec3 newCol = vec3(colorValue(color+noise));
-  float alpha;
-  if(newCol == vec3(1.)){
-    alpha = 0.;
-  } else {
-    alpha = 1.;
-    newCol = newCol*vec3(0.2)*snoise(pos*1000.+time/30.);
-  }
-	gl_FragColor = vec4(newCol,1.);
+  vec3 color = vec3(0.0);
+  vec3 pos = vec3(st);
+
+  float DF = 0.0;
+
+  // Add a random position
+  float a = 0.0;
+  vec3 vel = vec3(time*.05);
+  DF += snoise(pos+vel)*.3+.3;
+
+  // Add a random position
+  a = snoise(pos*vec3(cos(time*0.05),sin(time*0.05),cos(time*0.05))*0.1)*3.1415;
+  vel = vec3(cos(a),sin(a), atan(a));
+  DF += snoise(pos+vel)*.25+.25;
+
+  color = vec3( smoothstep(.7,.80,fract(DF)) );
+  //color = vec3(colorValue((snoise(color+0.1))+0.6)-0.2)+0.05;
+  gl_FragColor = vec4(1.0-color,1.0);
 }

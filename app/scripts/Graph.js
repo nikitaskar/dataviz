@@ -13,6 +13,9 @@ class Graph {
 		this.ringInfo = args.info;
 		this.more = document.querySelector('.more')
 		this.nav = document.querySelector('.nav')
+
+		this.infos = document.querySelector('.infos')
+		this.years = document.querySelector('.years')
 		this.more.addEventListener('click', this.moreInfos.bind(this));
 		console.log(this.datas)
 		
@@ -21,7 +24,7 @@ class Graph {
 	}
 
 	moreInfos(){
-		this.infos = document.querySelector('.infos')
+		this.infos.style.opacity = 0.7;
 		this.infos.innerHTML = this.ringInfo;
 	}
 
@@ -104,6 +107,8 @@ class Graph {
         this.high.style.transform = "translate(" + vector2.x + "px," + vector2.y + "px) scale(0.75)";
         this.nav.style.opacity = 1;
         this.nav.style.pointerEvents = "auto"
+        this.years.style.opacity = 1
+        
 	}
 
 	backToEarth(){
@@ -124,6 +129,8 @@ class Graph {
 		this.name.style.opacity = 0;
 		this.nav.style.opacity = 0;
 		this.nav.style.pointerEvents = "none"
+		this.infos.style.opacity = 0
+		this.years.style.opacity = 0
 	}
 }
 
